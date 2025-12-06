@@ -21,6 +21,9 @@ void I2SAudioSpeaker::setup() {
   ESP_LOGI(TAG, "setup");
   auto cfg = M5.Speaker.config();
   cfg.task_priority = 10;
+  cfg.stereo = true;
+  cfg.dac_zero_level = 0;
+  cfg.task_priority = 15;
   cfg.dma_buf_count = this->dma_buf_count_;
   cfg.dma_buf_len = this->buffer_size_;
   //cfg.use_dac = true;         // Enable internal DAC
@@ -100,8 +103,8 @@ void I2SAudioSpeaker::player_task(void *params) {
         ESP_LOGI(TAG, "  [%u] %d", (unsigned)i, mono[i]);
     }
 
-    ESP_LOGI(TAG, "Calling playRaw: num_samples=%u, sample_rate=%d", (unsigned)num_samples, 16000);
-    M5.Speaker.playRaw(mono, num_samples, this_speaker->sample_rate_);
+    ESP_LOGI(TAG, "Calling playRaw: num_samples=%u, sample_rate=%d", (unsigned)num_samples, this_speaker->sample_rate_);
+    M5.Speaker.playRaw(mono, num_samples, this_speaker->sample_rate_, true, 1, -1, true);
 
     event.type = TaskEventType::PLAYING;
     xQueueSend(this_speaker->event_queue_, &event, portMAX_DELAY);
@@ -172,7 +175,7 @@ size_t I2SAudioSpeaker::play(const uint8_t *data, size_t length) {
 
   size_t num_samples = length / sizeof(int16_t);
   int sample_rate = this->sample_rate_;
-  //ESP_LOGI(TAG, "playRaw: num_samples=%u, sample_rate=%d", (unsigned)num_samples, sample_rate);
+  ESP_LOGI(TAG, "playRaw: num_samples=%u, sample_rate=%d", (unsigned)num_samples, sample_rate);
 
   const int16_t* mono_in = reinterpret_cast<const int16_t*>(data);
   //std::vector<int16_t> mono(mono_in, mono_in + num_samples);
