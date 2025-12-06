@@ -63,9 +63,9 @@ class I2SAudioSpeaker : public Component, public speaker::Speaker, public I2SAud
   // void stop_();
   void watch_();
 
-  uint8_t dma_buf_count_ = 8;
+  uint8_t dma_buf_count_ = 16;
   size_t buffer_size_ = 1024;
-  uint32_t sample_rate_ = 44100;
+  uint32_t sample_rate_ = 22050;
   static void player_task(void *params);
   float volume_ = 1.0f;
 
