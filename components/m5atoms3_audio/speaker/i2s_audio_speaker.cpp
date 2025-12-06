@@ -63,14 +63,14 @@ void I2SAudioSpeaker::player_task(void *params) {
   event.type = TaskEventType::STARTING;
   xQueueSend(this_speaker->event_queue_, &event, portMAX_DELAY);
 
-  auto cfg = M5.Speaker.config();
-  cfg.dma_buf_count = this_speaker-> dma_buf_count_;
-  cfg.dma_buf_len = this_speaker->buffer_size_ / 2;
-  cfg.task_priority = 15;
-  M5.Speaker.config(cfg);
-  M5.Mic.end();
-  M5.Speaker.begin();
-  ESP_LOGI(TAG, "spk start play");
+  //auto cfg = M5.Speaker.config();
+  //cfg.dma_buf_count = this_speaker-> dma_buf_count_;
+  //cfg.dma_buf_len = this_speaker->buffer_size_ / 2;
+  //cfg.task_priority = 15;
+  //M5.Speaker.config(cfg);
+  //M5.Mic.end();
+  //M5.Speaker.begin();
+  //ESP_LOGI(TAG, "spk start play");
 
   DataEvent data_event;
   data_event.data.resize(this_speaker->buffer_size_ / 2);
